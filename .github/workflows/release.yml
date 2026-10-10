@@ -1,0 +1,54 @@
+name: Validate and release skills
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/package_skill.py
+      - name: Verify deterministic package
+        run: |
+          cp dist/SHA256SUMS /tmp/skill-checksum
+          python scripts/package_skill.py
+          cmp dist/SHA256SUMS /tmp/skill-checksum
+      - uses: actions/upload-artifact@v4
+        with:
+          name: leaderboard-skill
+          path: dist/
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: package
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: leaderboard-skill
+          path: dist/
+      - name: Check tag version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python - <<'PY'
+          import os, re
+          from pathlib import Path
+          text = Path('skills/1gp-leaderboard/SKILL.md').read_text()
+          version = re.search(r'^  version: "(\d+\.\d+\.\d+)"$', text, re.M).group(1)
+          assert os.environ['RELEASE_TAG'] == 'v' + version
+          PY
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: gh release create "$RELEASE_TAG" dist/1gp-leaderboard.zip dist/SHA256SUMS --verify-tag --title "1GP Leaderboard Skill $RELEASE_TAG" --notes "Native REST leaderboard integration for AI coding assistants. Download the ZIP and extract the entire skill folder. Installation instructions are in the repository README."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "1GP Leaderboard"
+  short_description: "Connect game events to 1GP leaderboard REST APIs"
+  default_prompt: "Use $1gp-leaderboard to integrate this game's round start and final score with the existing board in my copied 1GP prompt."
