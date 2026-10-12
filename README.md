@@ -16,6 +16,14 @@ Invoke explicitly if needed: `$1gp-leaderboard` in Codex, `/1gp-leaderboard` in 
 
 [Codex documentation](https://learn.chatgpt.com/docs/build-skills) · [Claude Code documentation](https://code.claude.com/docs/en/skills) · [1GP REST guide](https://www.ai-made.games/guide/leaderboards)
 
+## 1GP cloud saves
+
+Teach your AI to define a complete save snapshot, restore it before gameplay starts, keep offline progress, migrate old formats and verify a real save/load round trip.
+
+1. Download [1gp-cloud-save.zip](https://github.com/1gp-studio/skills/releases/latest/download/1gp-cloud-save.zip), or use the [website download](https://www.ai-made.games/downloads/1gp-cloud-save.zip).
+2. Extract the **entire `1gp-cloud-save` folder** into `.agents/skills/` (Codex) or `.claude/skills/` (Claude Code).
+3. On your game's 1GP page, open cloud saves and click **Copy integration prompt**. Paste it into your coding assistant; the prompt supplies the game ID and save-format version.
+
 ## 1GP store kit
 
 Teach your AI to play the game and prepare its 1GP store page: title, description, category, tags, AI tools, screen, session length, a maker-notes draft, a 16:9 cover, screenshots and a short preview video. Everything goes into a `.1gp/` folder in the game project; nothing is uploaded.
@@ -28,6 +36,8 @@ Teach your AI to play the game and prepare its 1GP store page: title, descriptio
 ## 中文
 
 下载 ZIP，将完整的 `1gp-leaderboard` 文件夹放入游戏项目：Codex 使用 `.agents/skills/`，Claude Code 使用 `.claude/skills/`。然后在 1GP 游戏页选择榜单，点击「复制接入提示词」，交给 AI 执行。Skill 提供通用流程，提示词提供当前榜单配置。游戏运行时仅使用 REST API。
+
+云存档：同样把完整的 `1gp-cloud-save` 文件夹放进去，在游戏页的云存档里点「复制接入提示词」交给 AI。提示词提供游戏 ID 和存档格式版本。
 
 上架物料：同样把完整的 `1gp-store-kit` 文件夹放进去，对 AI 说「帮我准备上架物料」。AI 会试玩游戏，在 `.1gp/` 里写好名字、介绍、分类、标签、制作信息，并做好封面、截图和预览视频。在 1GP 发布页或游戏的「编辑」里点「导入上架物料」，选这个文件夹，检查后保存。
 

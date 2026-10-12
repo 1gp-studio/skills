@@ -1,0 +1,4 @@
+interface:
+  display_name: "1GP Cloud Saves"
+  short_description: "Save and restore a game's progress with 1GP cloud saves"
+  default_prompt: "Use $1gp-cloud-save to add 1GP cloud saves to this game with the configuration in my copied 1GP prompt."
