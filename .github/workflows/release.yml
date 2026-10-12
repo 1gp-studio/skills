@@ -22,7 +22,7 @@ jobs:
           cmp dist/SHA256SUMS /tmp/skill-checksum
       - uses: actions/upload-artifact@v4
         with:
-          name: leaderboard-skill
+          name: skills
           path: dist/
   release:
     if: startsWith(github.ref, 'refs/tags/v')
@@ -34,21 +34,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: leaderboard-skill
+          name: skills
           path: dist/
       - name: Check tag version
         env:
           RELEASE_TAG: ${{ github.ref_name }}
-        run: |
-          python - <<'PY'
-          import os, re
-          from pathlib import Path
-          text = Path('skills/1gp-leaderboard/SKILL.md').read_text()
-          version = re.search(r'^  version: "(\d+\.\d+\.\d+)"$', text, re.M).group(1)
-          assert os.environ['RELEASE_TAG'] == 'v' + version
-          PY
+        run: test "$RELEASE_TAG" = "v$(cat VERSION)"
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: gh release create "$RELEASE_TAG" dist/1gp-leaderboard.zip dist/SHA256SUMS --verify-tag --title "1GP Leaderboard Skill $RELEASE_TAG" --notes "Native REST leaderboard integration for AI coding assistants. Download the ZIP and extract the entire skill folder. Installation instructions are in the repository README."
+        run: gh release create "$RELEASE_TAG" dist/*.zip dist/SHA256SUMS --verify-tag --title "1GP Skills $RELEASE_TAG" --notes "Skills for AI coding assistants working on 1GP games. Download a ZIP and extract the entire skill folder. Installation instructions are in the repository README."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "1GP Store Kit"
+  short_description: "Prepare a game's 1GP store page: copy, cover, screenshots and preview"
+  default_prompt: "Use $1gp-store-kit to play this game and prepare its 1GP store materials in .1gp/."
