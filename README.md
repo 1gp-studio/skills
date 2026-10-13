@@ -26,12 +26,16 @@ Teach your AI to define a complete save snapshot, restore it before gameplay sta
 
 ## 1GP store kit
 
-Teach your AI to play the game and prepare its 1GP store page: title, description, category, tags, AI tools, screen, session length, a maker-notes draft, a 16:9 cover, screenshots and a short preview video. Everything goes into a `.1gp/` folder in the game project; nothing is uploaded.
+Teach your AI to prepare a game's 1GP store page in Chinese and English: title, description, tags, category, AI tools, screen, session length, maker notes, a 16:9 cover, 3–5 screenshots and a 12–18 s trailer-style preview video. The video is portrait or landscape to match the game. Everything goes into a `1gp-kit/` folder in the game project; nothing is uploaded.
+
+The included `scripts/record.mjs` records the video and screenshots with only Node 22+ and an installed Chrome or Edge. It needs no npm packages, Playwright or ffmpeg.
 
 1. Download [1gp-store-kit.zip](https://github.com/1gp-studio/skills/releases/latest/download/1gp-store-kit.zip), or use the [website download](https://www.ai-made.games/downloads/1gp-store-kit.zip).
 2. Extract the **entire `1gp-store-kit` folder** into `.agents/skills/` (Codex) or `.claude/skills/` (Claude Code).
 3. Ask your assistant to prepare the 1GP store materials (`$1gp-store-kit` / `/1gp-store-kit`).
-4. On 1GP, in the publish wizard or the game's **Edit** dialog, click **Import store kit**, choose `.1gp/`, review and save.
+4. Open `1gp-kit/preview.html` to check the card and game page in both languages.
+5. On 1GP, in the publish wizard or the game's **Edit** dialog, click **Import store kit**, choose `1gp-kit/`, review and save.
+6. Imported screenshots are added after the existing ones, so tidy them up in the Screenshots tab.
 
 ## 中文
 
@@ -39,7 +43,7 @@ Teach your AI to play the game and prepare its 1GP store page: title, descriptio
 
 云存档：同样把完整的 `1gp-cloud-save` 文件夹放进去，在游戏页的云存档里点「复制接入提示词」交给 AI。提示词提供游戏 ID 和存档格式版本。
 
-上架物料：同样把完整的 `1gp-store-kit` 文件夹放进去，对 AI 说「帮我准备上架物料」。AI 会试玩游戏，在 `.1gp/` 里写好名字、介绍、分类、标签、制作信息，并做好封面、截图和预览视频。在 1GP 发布页或游戏的「编辑」里点「导入上架物料」，选这个文件夹，检查后保存。
+上架物料：同样把完整的 `1gp-store-kit` 文件夹放进去，对 AI 说「帮我准备上架物料」。AI 会读项目、试玩游戏，在 `1gp-kit/` 里写好中英文的名字、介绍和标签，以及分类和制作信息。它还会用导演脚本录一段 12–18 秒的预览视频，竖屏游戏出竖屏视频，横屏游戏出横屏视频，同时截好截图、做好封面。录制只需要 Node 22+ 和电脑上的 Chrome 或 Edge。先双击 `1gp-kit/preview.html` 看效果，再在 1GP 发布页或游戏的「编辑」里点「导入上架物料」选这个文件夹，检查后保存。导入的截图会加在原有截图后面，记得去「截图」页签整理。
 
 ## Releases
 
