@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- 16:9 cover for a portrait game: the game title on the left, a real screenshot on the right.
+     Copy next to the screenshot, fill DATA, then: node record.mjs still cover.html --size 1600x900 --out 1gp-kit/cover.png
+     Use the game's own font and colours. No text the game does not show, no badges, prices or logos. -->
+<html lang="zh"><head><meta charset="utf-8"><title>cover</title>
+<style>
+  /* @font-face { font-family: Game; src: url('../fonts/game.woff2'); }  ← point at the game's font when it has one */
+  :root { --bg: #1b1b2f; --title: #ffe14a; --sub: #ffffff; --stroke: #1b1b2f; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--bg); }
+  .back { position: absolute; inset: -40px; background: center / cover no-repeat; filter: blur(28px) saturate(1.2) brightness(.75); }
+  .shade { position: absolute; inset: 0; background: linear-gradient(90deg, #000a 0%, #0006 45%, #0000 70%); }
+  .text { position: absolute; left: 7vw; top: 50%; transform: translateY(-50%); width: 46vw; font-family: Game, system-ui, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  h1 { color: var(--title); font-size: 9.5vw; line-height: 1.05; font-weight: 900; -webkit-text-stroke: .7vw var(--stroke); paint-order: stroke fill; text-shadow: 0 .6vw 0 var(--stroke); }
+  p { margin-top: 2.2vw; color: var(--sub); font-size: 2.6vw; font-weight: 700; -webkit-text-stroke: .35vw var(--stroke); paint-order: stroke fill; }
+  .phone { position: absolute; right: 7vw; top: 5vh; height: 90vh; aspect-ratio: 9 / 16; border-radius: 2.2vw; overflow: hidden; box-shadow: 0 2vw 4vw #0008; transform: rotate(3deg); background: center / cover no-repeat; }
+</style></head>
+<body>
+<div class="back"></div><div class="shade"></div>
+<div class="text"><h1></h1><p></p></div>
+<div class="phone"></div>
+<script id="data" type="application/json">
+{ "title": "游戏名", "tagline": "一句话卖点（游戏里有的字）", "shot": "shots/01.png" }
+</script>
+<script>
+  const d = JSON.parse(document.getElementById('data').textContent);
+  document.querySelector('h1').textContent = d.title;
+  document.querySelector('p').textContent = d.tagline || '';
+  for (const el of document.querySelectorAll('.back, .phone')) el.style.backgroundImage = `url("${d.shot}")`;
+</script>
+</body></html>

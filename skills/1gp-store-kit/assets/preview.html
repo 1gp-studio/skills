@@ -1,0 +1,127 @@
+<!doctype html>
+<!-- Store-kit preview. Copy to 1gp-kit/preview.html and paste game.json (plus "todo") into the DATA block.
+     The creator double-clicks it to see the card and game page in Chinese and English before importing. -->
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>上架物料预览</title>
+<style>
+  :root { --ink: #111; --line: #111; --muted: #666; --soft: #f3f3f0; --blue: #2b3cff; --warn: #fff4c2; --bg: #fff; }
+  @media (prefers-color-scheme: dark) { :root { --ink: #f2f2f2; --line: #e8e8e8; --muted: #aaa; --soft: #222; --warn: #4a3d00; --bg: #141414; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 system-ui, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  h1 { margin: 0; font-size: 22px; }
+  .lang { display: flex; border: 2px solid var(--line); }
+  .lang button { border: 0; padding: 6px 14px; font: inherit; font-weight: 700; background: none; color: inherit; cursor: pointer; }
+  .lang button[aria-pressed=true] { background: var(--ink); color: var(--bg); }
+  .todo { border: 2px solid var(--line); background: var(--warn); padding: 12px 16px; margin-bottom: 24px; }
+  .todo h2 { margin: 0 0 4px; font-size: 16px; }
+  .todo ul { margin: 0; padding-left: 20px; }
+  .label { margin: 28px 0 10px; font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: .04em; }
+  .row { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  .card { width: min(360px, 100%); border: 2px solid var(--line); }
+  .cover { position: relative; aspect-ratio: 16 / 9; background: var(--soft) center / cover no-repeat; overflow: hidden; }
+  .cover video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card-body { padding: 10px 12px; }
+  .card-body strong { font-size: 16px; }
+  .chip { display: inline-block; margin-left: 6px; padding: 0 8px; border: 2px solid var(--line); font-size: 12px; font-weight: 700; }
+  .phone { width: 220px; aspect-ratio: 9 / 16; border: 8px solid var(--ink); border-radius: 24px; overflow: hidden; background: #000; }
+  .phone video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .wide video { width: min(640px, 100%); border: 2px solid var(--line); display: block; }
+  .page { border: 2px solid var(--line); padding: 20px; }
+  .page h2 { margin: 0 0 6px; font-size: 26px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 10px 0; list-style: none; }
+  .tags li { font-weight: 700; color: var(--blue); }
+  .desc { white-space: pre-line; }
+  .shots { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
+  .shots img { height: 240px; border: 2px solid var(--line); }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 16px 0; }
+  dt { color: var(--muted); }
+  dd { margin: 0; }
+  .notes { white-space: pre-line; background: var(--soft); padding: 12px 14px; }
+  .missing { color: var(--muted); font-style: italic; }
+  .how { margin-top: 32px; border-top: 2px solid var(--line); padding-top: 16px; color: var(--muted); }
+</style></head>
+<body><main>
+<header><h1 data-t="title"></h1><div class="lang" role="group" aria-label="Language"><button data-lang="zh">中文</button><button data-lang="en">English</button></div></header>
+<section class="todo" hidden><h2 data-t="todo"></h2><ul></ul></section>
+
+<p class="label" data-t="cardLabel"></p>
+<div class="row">
+  <div class="card"><div class="cover"></div><div class="card-body"><strong class="name"></strong><span class="chips"></span></div></div>
+  <div class="video-slot"></div>
+</div>
+
+<p class="label" data-t="pageLabel"></p>
+<article class="page">
+  <h2 class="name"></h2>
+  <ul class="tags"></ul>
+  <p class="desc"></p>
+  <div class="shots"></div>
+  <dl></dl>
+  <h3 data-t="notes"></h3>
+  <p class="notes"></p>
+</article>
+<p class="how" data-t="how"></p>
+</main>
+
+<script id="data" type="application/json">
+{ "title": "游戏名", "titleEn": "Game", "description": "…", "descriptionEn": "…", "genre": "casual", "tags": [], "tagsEn": [],
+  "tools": [], "orientation": "portrait", "session": "short", "notes": "", "cover": "cover.png", "screenshots": [], "preview": "preview.webm",
+  "todo": ["制作笔记：补一句灵感来源"] }
+</script>
+<script>
+const d = JSON.parse(document.getElementById('data').textContent);
+const T = {
+  zh: { title: '上架物料预览', todo: '需要你补充或确认', cardLabel: '首页卡片（鼠标移上去播放预览）', pageLabel: '游戏页', notes: '怎么做出来的', none: '（没填）',
+    genre: '分类', screen: '屏幕', session: '一局多久', tools: 'AI 工具',
+    how: '确认没问题后：打开 1GP「发布游戏」或游戏页的「编辑」→「导入上架物料」→ 选 1gp-kit 文件夹 → 检查 → 保存。导入的截图会加在原有截图后面，保存后去「截图」页签删掉不要的、排好顺序。「允许别人改一改」和「谁可以玩」请自己选。' },
+  en: { title: 'Store kit preview', todo: 'Please fill in or check', cardLabel: 'Home card (hover to play the preview)', pageLabel: 'Game page', notes: 'How it was made', none: '(empty)',
+    genre: 'Category', screen: 'Screen', session: 'Session', tools: 'AI tools',
+    how: 'When it looks right: on 1GP open Publish a game, or Edit on the game page → Import store kit → choose the 1gp-kit folder → review → save. Imported screenshots are added after the existing ones; tidy them up in the Screenshots tab afterwards. Remix permission and who can play are yours to set.' },
+};
+const genres = { casual: ['休闲', 'Casual'], puzzle: ['益智解谜', 'Puzzle'], action: ['动作', 'Action'], strategy: ['策略', 'Strategy'], simulation: ['模拟经营', 'Simulation'], adventure: ['冒险剧情', 'Adventure'], idle: ['放置', 'Idle'], rhythm: ['音乐节奏', 'Rhythm'] };
+const screens = { portrait: ['竖屏（手机最佳）', 'Portrait (best on phones)'], landscape: ['横屏', 'Landscape'], desktop: ['电脑（要键盘鼠标）', 'Desktop (keyboard and mouse)'] };
+const sessionNames = { short: ['5 分钟内', 'Under 5 minutes'], medium: ['半小时左右', 'About half an hour'], long: ['能玩很久', 'Hours'] };
+const el = (tag, props = {}, text) => { const e = Object.assign(document.createElement(tag), props); if (text !== undefined) e.textContent = text; return e; };
+const portrait = d.orientation === 'portrait';
+
+function render(lang) {
+  const t = T[lang], i = lang === 'en' ? 1 : 0, en = lang === 'en';
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === lang));
+  document.querySelectorAll('[data-t]').forEach(e => e.textContent = t[e.dataset.t]);
+  const name = (en && d.titleEn) || d.title || t.none;
+  document.querySelectorAll('.name').forEach(e => e.textContent = name);
+  const cover = document.querySelector('.cover');
+  cover.style.backgroundImage = d.cover ? `url("${d.cover}")` : 'none';
+  const chips = document.querySelector('.chips'); chips.replaceChildren();
+  if (d.genre && genres[d.genre]) chips.append(el('span', { className: 'chip' }, genres[d.genre][i]));
+  if (d.orientation && screens[d.orientation]) chips.append(el('span', { className: 'chip' }, screens[d.orientation][i].replace(/（.*|\s\(.*/, '')));
+  const desc = document.querySelector('.desc'); desc.textContent = (en && d.descriptionEn) || d.description || t.none; desc.classList.toggle('missing', !((en && d.descriptionEn) || d.description));
+  const tags = document.querySelector('.tags'); tags.replaceChildren(...((en && d.tagsEn?.length ? d.tagsEn : d.tags) || []).map(tag => el('li', {}, '#' + tag)));
+  const dl = document.querySelector('dl'); dl.replaceChildren();
+  for (const [k, v] of [['genre', genres[d.genre]?.[i]], ['screen', screens[d.orientation]?.[i]], ['session', sessionNames[d.session]?.[i]], ['tools', (d.tools || []).join(' · ')]])
+    dl.append(el('dt', {}, t[k]), el('dd', {}, v || t.none));
+  const notes = document.querySelector('.notes'); notes.textContent = d.notes || t.none; notes.classList.toggle('missing', !d.notes);
+  const todo = document.querySelector('.todo'); todo.hidden = !d.todo?.length;
+  todo.querySelector('ul').replaceChildren(...(d.todo || []).map(item => el('li', {}, item)));
+}
+
+// Media do not depend on the language.
+document.querySelector('.shots').append(...(d.screenshots || []).map(src => el('img', { src, alt: '', loading: 'lazy' })));
+if (d.preview) {
+  const video = () => el('video', { src: d.preview, muted: true, loop: true, playsInline: true, autoplay: true });
+  if (portrait) { const phone = el('div', { className: 'phone' }); phone.append(video()); document.querySelector('.video-slot').append(phone); }
+  else {
+    const card = el('video', { src: d.preview, muted: true, loop: true, playsInline: true }); card.style.opacity = 0;
+    const cover = document.querySelector('.cover'); cover.append(card);
+    cover.addEventListener('mouseenter', () => { card.style.opacity = 1; card.play(); });
+    cover.addEventListener('mouseleave', () => { card.style.opacity = 0; card.pause(); });
+    const wide = el('div', { className: 'wide' }); wide.append(video()); document.querySelector('.video-slot').append(wide);
+  }
+}
+document.querySelectorAll('[data-lang]').forEach(b => b.addEventListener('click', () => render(b.dataset.lang)));
+render((navigator.language || '').startsWith('zh') ? 'zh' : 'en');
+</script>
+</body></html>
