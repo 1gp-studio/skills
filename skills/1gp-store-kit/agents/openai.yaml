@@ -1,4 +1,0 @@
-interface:
-  display_name: "1GP Store Kit"
-  short_description: "Prepare a game's 1GP store page in Chinese and English: copy, cover, screenshots and a trailer"
-  default_prompt: "Use $1gp-store-kit to prepare this game's 1GP store materials in 1gp-kit/."
