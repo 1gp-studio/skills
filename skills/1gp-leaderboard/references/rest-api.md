@@ -1,19 +1,19 @@
 # 1GP leaderboard REST v1
 
-All paths are relative to the platform origin supplied in the user's copied prompt, followed by `/api/v1`. The game uses native HTTP requests, not a platform script. `boardId` is the REST identifier; the `key` is not needed for these paths.
+All paths are relative to the platform origin that answered the handshake below, followed by `/api/v1`. The platform has several official origins and may add more: `['https://www.aiwanna.games', 'https://aiwanna.games', 'https://www.ai-made.games', 'https://ai-made.games', 'https://1gp-game-platform.vercel.app']`. A game embedded at any of them must work, so never accept only one. The game uses native HTTP requests, not a platform script. `boardId` is the REST identifier; the `key` is not needed for these paths.
 
 ## Player token
 
-Inside the platform's game iframe, register a `message` listener, then send:
+Inside the platform's game iframe, register a `message` listener, then send one copy to each official origin (the browser delivers only the one the game is embedded in):
 
 ```js
-window.parent.postMessage({
-  source: 'aimadegames', type: 'leaderboard-session',
-  requestId: crypto.randomUUID()
+const requestId = crypto.randomUUID();
+for (const platformOrigin of platformOrigins) window.parent.postMessage({
+  source: 'aimadegames', type: 'leaderboard-session', requestId
 }, platformOrigin);
 ```
 
-Accept only messages from `window.parent` with `event.origin === platformOrigin`, `source === 'aimadegames-platform'`, `type === 'leaderboard-session'`, and the matching requestId. Successful replies contain `apiOrigin === platformOrigin` and `session: {token, expiresAt, gameId, player: {displayName, isGuest}}`. Failure replies contain `error`. Validate session.gameId against the configured gameId. Timeout and remove the listener after 15 seconds. The platform performs the same-origin POST `/games/{gameId}/sessions` itself; a cross-origin game cannot mint sessions using platform login cookies.
+Accept only messages from `window.parent` whose `event.origin` is one of the official origins, `source === 'aimadegames-platform'`, `type === 'leaderboard-session'`, and the matching requestId. Successful replies contain `apiOrigin === event.origin` (use that origin for every later request) and `session: {token, expiresAt, gameId, player: {displayName, isGuest}}`. Failure replies contain `error`. Validate session.gameId against the configured gameId. Timeout and remove the listener after 15 seconds. The platform performs the same-origin POST `/games/{gameId}/sessions` itself; a cross-origin game cannot mint sessions using platform login cookies.
 
 The token lasts one hour and is scoped to the game, player and registered game origin. Keep it in memory. Refresh with the same handshake. Guests retain browser-scoped identity; login does not merge guest scores. Redirecting a game to another origin requires its registered play URL to be updated. Standalone games cannot perform this handshake.
 

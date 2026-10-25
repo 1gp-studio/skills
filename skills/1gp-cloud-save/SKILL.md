@@ -2,7 +2,7 @@
 name: 1gp-cloud-save
 description: Integrate 1GP platform cloud saves into a browser game, including explicit state serialization, loading before gameplay, local persistence, and save-format migrations. Use with the game's cloud-save integration prompt from its 1GP page.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # 1GP cloud saves
@@ -17,7 +17,7 @@ Call `save()` after checkpoints and important changes. Keep complete snapshots s
 
 Keep these invariants when implementing native REST or adapting an engine:
 
-- Get a dedicated cloud-save session through the mounted platform iframe handshake. Leaderboard tokens are not save tokens. Validate parent window, exact origin, request ID and game ID; never send credentials or state to `*`.
+- Get a dedicated cloud-save session through the mounted platform iframe handshake. Leaderboard tokens are not save tokens. The game may be embedded at any official platform origin (`['https://www.aiwanna.games', 'https://aiwanna.games', 'https://www.ai-made.games', 'https://ai-made.games', 'https://1gp-game-platform.vercel.app']`): ask each, accept a reply only from one on that list, and then use the origin that replied. Validate parent window, request ID and game ID; never send credentials or state to `*`.
 - A failed read is not an empty save. Only a successful read establishes the base revision. Signed-out players keep their progress locally.
 - Include `baseRevision` and a UUID `Idempotency-Key` when writing. Preserve both the key and the request body on retries. Mutation receipts contain metadata; GET returns the full snapshot.
 - On a revision conflict, keep both versions and obtain the player's choice. Never use device timestamps or unconditional last-write-wins.

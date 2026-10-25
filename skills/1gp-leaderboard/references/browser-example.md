@@ -1,9 +1,11 @@
 # Native browser request example
 
-Adapt this example to actual round state and lifecycle hooks. Replace platform and boardId from the user’s copied prompt. Additionally check session.gameId against the configured gameId before using a session. This is illustrative game code, not an installed runtime dependency.
+Adapt this example to actual round state and lifecycle hooks. Replace boardId from the user’s copied prompt. The game may be embedded at any official platform address, so the handshake asks all of them and later requests go to the one that answered; do not hard-code a single address. Additionally check session.gameId against the configured gameId before using a session. This is illustrative game code, not an installed runtime dependency.
 
 ```js
-const platform = 'https://www.ai-made.games';
+// The platform's official addresses. Requests go to the one that answers the handshake.
+const platforms = ['https://www.aiwanna.games', 'https://aiwanna.games', 'https://www.ai-made.games', 'https://ai-made.games', 'https://1gp-game-platform.vercel.app'];
+let platform = platforms[0];
 const boardId = 'YOUR_BOARD_ID';
 
 function getPlayerSession() {
@@ -16,16 +18,19 @@ function getPlayerSession() {
     };
     const receive = (event) => {
       const data = event.data;
-      if (event.source !== window.parent || event.origin !== platform ||
+      if (event.source !== window.parent || !platforms.includes(event.origin) ||
           !data || data.source !== 'aimadegames-platform' ||
           data.type !== 'leaderboard-session' || data.requestId !== requestId) return;
       if (data.error) return finish(new Error(data.error));
-      if (data.apiOrigin !== platform || !data.session?.token) return;
+      if (data.apiOrigin !== event.origin || !data.session?.token) return;
+      platform = event.origin;
       finish(null, data.session);
     };
     const timer = setTimeout(() => finish(new Error('Session timeout')), 15000);
     window.addEventListener('message', receive);
-    window.parent.postMessage({source:'aimadegames', type:'leaderboard-session', requestId}, platform);
+    // One copy per address; the browser delivers only the one the game is embedded in.
+    for (const target of platforms)
+      window.parent.postMessage({source:'aimadegames', type:'leaderboard-session', requestId}, target);
   });
 }
 
